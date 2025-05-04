@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rating Comparison Tool</title>
+    <title>Deep Anchor rating Tool</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -80,7 +80,7 @@
 </head>
 <body class="bg-gray-100 p-6">
     <div class="container max-w-2xl mx-auto bg-white shadow-md rounded-lg p-8">
-        <h1 class="text-2xl font-semibold text-blue-600 text-center mb-6">Rating Comparison Tool</h1>
+        <h1 class="text-2xl font-semibold text-blue-600 text-center mb-6">Deep Anchor Rating</h1>
         <br>
         <form id="ratingForm" class="mb-8">
             <div class="flex items-center mb-4">
@@ -136,10 +136,12 @@
                 <div class="bg-gray-50 rounded-lg p-6 flex flex-col justify-center items-center">
                     <h3 class="text-lg font-semibold text-gray-800 mb-2">Deep Anchor Rating:</h3>
                     <p id="deepAnchorRating" class="text-2xl text-green-700 font-bold">0 Stars</p>
+                    <p id="deepAnchorSentiment" class="text-sm text-gray-500 italic"></p>
                 </div>
                 <div class="bg-gray-50 rounded-lg p-6 flex flex-col justify-center items-center">
                     <h3 class="text-lg font-semibold text-gray-800 mb-2">Amazon Rating:</h3>
                     <p id="amazonRating" class="text-2xl text-blue-700 font-bold">0 Stars</p>
+                    <p id="amazonSentiment" class="text-sm text-gray-500 italic"></p>
                 </div>
             </div>
         </div>
@@ -225,10 +227,18 @@
                 hasErrors = true;
             }
 
-            if (!inputTypeSwitch.checked && fiveStar + fourStar + threeStar + twoStar + oneStar !== 100) {
-                alert('Percentages must add up to 100.');
-                hasErrors = true;
+            if (!inputTypeSwitch.checked) {
+                if (fiveStar + fourStar + threeStar + twoStar + oneStar !== 100) {
+                    alert('Percentages must add up to 100.');
+                    hasErrors = true;
+                }
+            } else {
+                 if (fiveStar + fourStar + threeStar + twoStar + oneStar > totalRatings) {
+                    alert('Sum of ratings cannot exceed total ratings.');
+                    hasErrors = true;
+                }
             }
+
 
             if (hasErrors) {
                 return; // Stop processing if there are errors
@@ -258,7 +268,9 @@
 
             // Display results
             document.getElementById('amazonRating').textContent = amazonRating.toFixed(1) + " Stars";
+            document.getElementById('amazonSentiment').textContent = getSentiment(amazonRating);
             document.getElementById('deepAnchorRating').textContent = deepAnchorRating.toFixed(1) + " Stars";
+            document.getElementById('deepAnchorSentiment').textContent = getSentiment(deepAnchorRating);
             document.getElementById('results').classList.remove('hidden');
         });
 
@@ -292,6 +304,24 @@
             }
 
             return finalRating;
+        }
+
+        function getSentiment(rating) {
+            if (rating >= 4.8) {
+                return "Exceptional! A must-buy";
+            } else if (rating >= 4.5) {
+                return "Highly recommended";
+            } else if (rating >= 4.0) {
+                return "Strongly recommend";
+            } else if (rating >= 3.5) {
+                return "Good";
+            } else if (rating >= 3.0) {
+                return "Average";
+            } else if (rating >= 2.0) {
+                return "Below average";
+            } else {
+                return "Poor. Do not buy";
+            }
         }
     </script>
 </body>
