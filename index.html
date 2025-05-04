@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Anchor Rating System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-6">
+    <div class="container max-w-2xl mx-auto bg-white shadow-md rounded-lg p-8">
+        <h1 class="text-2xl font-semibold text-blue-600 text-center mb-6">Deep Anchor Rating System</h1>
+        <form id="ratingForm" class="mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+                <div>
+                    <label for="totalRatings" class="block text-gray-700 text-sm font-bold mb-2">Total Number of Ratings:</label>
+                    <input type="number" id="totalRatings" name="totalRatings" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <div id="totalRatings-error" class="text-red-500 text-xs italic" style="display: none;"></div>
+                </div>
+                <div>
+                    <label for="fiveStarPercent" class="block text-gray-700 text-sm font-bold mb-2">5-Star Ratings (%):</label>
+                    <input type="number" id="fiveStarPercent" name="fiveStarPercent" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <div id="fiveStarPercent-error" class="text-red-500 text-xs italic" style="display: none;"></div>
+                </div>
+                <div>
+                    <label for="fourStarPercent" class="block text-gray-700 text-sm font-bold mb-2">4-Star Ratings (%):</label>
+                    <input type="number" id="fourStarPercent" name="fourStarPercent" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <div id="fourStarPercent-error" class="text-red-500 text-xs italic" style="display: none;"></div>
+                </div>
+                <div>
+                    <label for="threeStarPercent" class="block text-gray-700 text-sm font-bold mb-2">3-Star Ratings (%):</label>
+                    <input type="number" id="threeStarPercent" name="threeStarPercent" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <div id="threeStarPercent-error" class="text-red-500 text-xs italic" style="display: none;"></div>
+                </div>
+                <div>
+                    <label for="twoStarPercent" class="block text-gray-700 text-sm font-bold mb-2">2-Star Ratings (%):</label>
+                    <input type="number" id="twoStarPercent" name="twoStarPercent" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <div id="twoStarPercent-error" class="text-red-500 text-xs italic" style="display: none;"></div>
+                </div>
+                <div>
+                    <label for="oneStarPercent" class="block text-gray-700 text-sm font-bold mb-2">1-Star Ratings (%):</label>
+                    <input type="number" id="oneStarPercent" name="oneStarPercent" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <div id="oneStarPercent-error" class="text-red-500 text-xs italic" style="display: none;"></div>
+                </div>
+            </div>
+            <button type="submit" class="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">Calculate Ratings</button>
+        </form>
+
+        <div id="results" class="mt-8">
+            <h2 class="text-xl font-semibold text-green-600 text-center mb-4">Rating Results</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-gray-50 rounded-lg p-6 flex flex-col justify-center items-center">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Deep Anchor Rating:</h3>
+                    <p id="deepAnchorRating" class="text-2xl text-green-700 font-bold">0 Stars</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('ratingForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Reset error messages
+            document.getElementById('totalRatings-error').style.display = 'none';
+            document.getElementById('fiveStarPercent-error').style.display = 'none';
+            document.getElementById('fourStarPercent-error').style.display = 'none';
+            document.getElementById('threeStarPercent-error').style.display = 'none';
+            document.getElementById('twoStarPercent-error').style.display = 'none';
+            document.getElementById('oneStarPercent-error').style.display = 'none';
+
+            // Get input values
+            const totalRatings = parseInt(document.getElementById('totalRatings').value);
+            const fiveStarPercent = parseFloat(document.getElementById('fiveStarPercent').value);
+            const fourStarPercent = parseFloat(document.getElementById('fourStarPercent').value);
+            const threeStarPercent = parseFloat(document.getElementById('threeStarPercent').value);
+            const twoStarPercent = parseFloat(document.getElementById('twoStarPercent').value);
+            const oneStarPercent = parseFloat(document.getElementById('oneStarPercent').value);
+
+            // Validate inputs
+            let hasErrors = false;
+
+            if (isNaN(totalRatings) || totalRatings <= 0) {
+                document.getElementById('totalRatings-error').textContent = 'Please enter a valid number of ratings.';
+                document.getElementById('totalRatings-error').style.display = 'block';
+                hasErrors = true;
+            }
+            if (isNaN(fiveStarPercent) || fiveStarPercent < 0 || fiveStarPercent > 100) {
+                document.getElementById('fiveStarPercent-error').textContent = 'Please enter a valid percentage (0-100).';
+                document.getElementById('fiveStarPercent-error').style.display = 'block';
+                hasErrors = true;
+            }
+            if (isNaN(fourStarPercent) || fourStarPercent < 0 || fourStarPercent > 100) {
+                document.getElementById('fourStarPercent-error').textContent = 'Please enter a valid percentage (0-100).';
+                document.getElementById('fourStarPercent-error').style.display = 'block';
+                hasErrors = true;
+            }
+            if (isNaN(threeStarPercent) || threeStarPercent < 0 || threeStarPercent > 100) {
+                document.getElementById('threeStarPercent-error').textContent = 'Please enter a valid percentage (0-100).';
+                document.getElementById('threeStarPercent-error').style.display = 'block';
+                hasErrors = true;
+            }
+            if (isNaN(twoStarPercent) || twoStarPercent < 0 || twoStarPercent > 100) {
+                document.getElementById('twoStarPercent-error').textContent = 'Please enter a valid percentage (0-100).';
+                document.getElementById('twoStarPercent-error').style.display = 'block';
+                hasErrors = true;
+            }
+            if (isNaN(oneStarPercent) || oneStarPercent < 0 || oneStarPercent > 100) {
+                document.getElementById('oneStarPercent-error').textContent = 'Please enter a valid percentage (0-100).';
+                document.getElementById('oneStarPercent-error').style.display = 'block';
+                hasErrors = true;
+            }
+
+            if (fiveStarPercent + fourStarPercent + threeStarPercent + twoStarPercent + oneStarPercent !== 100) {
+                alert('Percentages must add up to 100.');
+                hasErrors = true;
+            }
+
+            if (hasErrors) {
+                return; // Stop processing if there are errors
+            }
+            // Perform calculations
+            const deepAnchorRating = calculateDeepAnchorRating(fiveStarPercent, fourStarPercent, threeStarPercent, twoStarPercent, oneStarPercent);
+
+            // Display results
+            document.getElementById('deepAnchorRating').textContent = deepAnchorRating.toFixed(1) + " Stars";
+            document.getElementById('results').classList.remove('hidden');
+        });
+
+
+
+        function calculateDeepAnchorRating(fiveStarPercent, fourStarPercent, threeStarPercent, twoStarPercent, oneStarPercent) {
+            const weightedAverage = (fiveStarPercent * 5 + fourStarPercent * 4 + threeStarPercent * 3 + twoStarPercent * 2 + oneStarPercent * 1) / 100;
+
+            // Penalties
+            const oneStarPenalty = -0.15 * (oneStarPercent / 10);
+            const twoStarPenalty = -0.10 * (twoStarPercent / 10);
+            const threeStarPenalty = -0.05 * (threeStarPercent / 10);
+            const totalPenalty = oneStarPenalty + twoStarPenalty + threeStarPenalty;
+
+            // Rewards
+            const fourStarReward = 0.05 * (Math.floor(fourStarPercent / 20));
+            const fiveStarReward = 0.10 * (Math.floor(fiveStarPercent / 20));
+            const totalReward = fourStarReward + fiveStarReward;
+
+            let finalRating = weightedAverage + totalPenalty + totalReward;
+
+            // Cap the rating at 5
+            if (finalRating > 5) {
+                finalRating = 5;
+            }
+
+            return finalRating;
+        }
+    </script>
+</body>
+</html>
