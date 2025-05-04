@@ -126,7 +126,7 @@
                     <input type="number" id="oneStar" name="oneStar" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                     <div id="oneStar-error" class="text-red-500 text-xs italic" style="display: none;"></div>
                 </div>
-            </div>
+            </div><br>
             <button type="submit" class="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">Calculate Ratings</button>
         </form>
 
@@ -134,12 +134,12 @@
             <h2 class="text-xl font-semibold text-green-600 text-center mb-4">Comparison Results</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="bg-gray-50 rounded-lg p-6 flex flex-col justify-center items-center">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Amazon Rating:</h3>
-                    <p id="amazonRating" class="text-2xl text-blue-700 font-bold">0 Stars</p>
-                </div>
-                <div class="bg-gray-50 rounded-lg p-6 flex flex-col justify-center items-center">
                     <h3 class="text-lg font-semibold text-gray-800 mb-2">Deep Anchor Rating:</h3>
                     <p id="deepAnchorRating" class="text-2xl text-green-700 font-bold">0 Stars</p>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-6 flex flex-col justify-center items-center">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Amazon Rating:</h3>
+                    <p id="amazonRating" class="text-2xl text-blue-700 font-bold">0 Stars</p>
                 </div>
             </div>
         </div>
@@ -236,7 +236,7 @@
 
             // Perform calculations
             let fiveStarPercent, fourStarPercent, threeStarPercent, twoStarPercent, oneStarPercent;
-            if (inputTypeSwitch.checked) {
+             if (inputTypeSwitch.checked) {
                 fiveStarPercent = (fiveStar / totalRatings) * 100;
                 fourStarPercent = (fourStar / totalRatings) * 100;
                 threeStarPercent = (threeStar / totalRatings) * 100;
@@ -252,7 +252,7 @@
             let amazonRating = calculateAmazonRating(fiveStarPercent, fourStarPercent, threeStarPercent, twoStarPercent, oneStarPercent);
             let deepAnchorRating = calculateDeepAnchorRating(fiveStarPercent, fourStarPercent, threeStarPercent, twoStarPercent, oneStarPercent);
 
-             // Cap ratings between 0 and 5
+            // Cap ratings between 0 and 5
             amazonRating = Math.max(0, Math.min(5, amazonRating));
             deepAnchorRating = Math.max(0, Math.min(5, deepAnchorRating));
 
@@ -287,7 +287,7 @@
                 finalRating = 5;
             }
              // Cap the rating at 0
-            if(finalRating < 0){
+            if (finalRating < 0){
                 finalRating = 0;
             }
 
